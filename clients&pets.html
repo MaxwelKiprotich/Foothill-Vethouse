@@ -87,6 +87,9 @@
             align-items: center;
             cursor: pointer;
             transition: var(--transition);
+            /* ensure anchors look like the original menu blocks */
+            text-decoration: none;
+            color: inherit;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -1054,38 +1057,50 @@
             <div class="brand-name">Foothill Vethouse</div>
         </div>
         <div class="sidebar-menu">
-            <div class="menu-item">
+            <a href="admin.html" class="menu-item">
                 <i class="fas fa-home"></i>
                 <span class="menu-text">Dashboard</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="adminapp.html" class="menu-item">
                 <i class="fas fa-calendar-alt"></i>
                 <span class="menu-text">Appointments</span>
-            </div>
-            <div class="menu-item active">
+            </a>
+            <a href="clients&pets.html" class="menu-item active">
                 <i class="fas fa-users"></i>
                 <span class="menu-text">Clients & Pets</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="vets.html" class="menu-item">
                 <i class="fas fa-user-md"></i>
                 <span class="menu-text">Veterinarians</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="inventory.html" class="menu-item">
                 <i class="fas fa-pills"></i>
                 <span class="menu-text">Inventory</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="billing.html" class="menu-item">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span class="menu-text">Billing</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="reports.html" class="menu-item">
                 <i class="fas fa-chart-bar"></i>
                 <span class="menu-text">Reports</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="settings.html" class="menu-item">
                 <i class="fas fa-cog"></i>
                 <span class="menu-text">Settings</span>
-            </div>
+            </a>
+             <a href="notifications.html" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span class="menu-text">Notifications</span>
+            </a>
+             <a href="profile.html" class="menu-item ">
+                <i class="fas fa-user-circle"></i>
+                <span class="menu-text">Profile</span>
+            </a>
+            <a href="logout.html" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Logout</span>
+            </a>
         </div>
     </div>
 

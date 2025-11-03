@@ -35,6 +35,7 @@
             color: var(--text);
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Sidebar Styles */
@@ -47,6 +48,11 @@
             position: fixed;
             overflow-y: auto;
             z-index: 100;
+            transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
         }
 
         .sidebar-header {
@@ -54,6 +60,12 @@
             display: flex;
             align-items: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
         }
 
         .logo {
@@ -77,6 +89,15 @@
             font-size: 18px;
         }
 
+        .close-sidebar {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
         .sidebar-menu {
             padding: 15px 0;
         }
@@ -87,6 +108,9 @@
             align-items: center;
             cursor: pointer;
             transition: var(--transition);
+            /* anchors should look like the original blocks */
+            text-decoration: none;
+            color: inherit;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -103,8 +127,8 @@
         /* Main Content Styles */
         .main-content {
             flex: 1;
-            margin-left: 250px;
             transition: var(--transition);
+            width: 100%;
         }
 
         /* Top Navigation */
@@ -118,6 +142,21 @@
             position: sticky;
             top: 0;
             z-index: 99;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text);
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
         }
 
         .search-bar {
@@ -374,57 +413,6 @@
             color: var(--text-light);
         }
 
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 70px;
-            }
-
-            .sidebar .brand-name, .sidebar .menu-text {
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 70px;
-            }
-
-            .charts-section {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .stats-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .search-bar {
-                width: 200px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .sidebar {
-                width: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .stats-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .search-bar {
-                display: none;
-            }
-
-            .top-nav {
-                padding: 15px;
-            }
-        }
-
         /* Button Styles */
         .btn {
             padding: 8px 16px;
@@ -474,6 +462,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
 
         th, td {
@@ -548,50 +537,167 @@
         .action-btn:hover {
             opacity: 0.8;
         }
+
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 993px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 250px;
+                width: calc(100% - 250px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 250px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .close-sidebar {
+                display: block;
+            }
+            
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+            
+            .dashboard-content {
+                padding: 20px;
+            }
+            
+            .top-nav {
+                padding: 15px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .top-nav {
+                padding: 15px;
+            }
+            
+            .nav-icons .nav-icon:not(:last-child) {
+                display: none;
+            }
+            
+            .dashboard-content {
+                padding: 15px;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay"></div>
+
     <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-paw"></i>
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <div class="brand-name">Foothill Vethouse</div>
             </div>
-            <div class="brand-name">Foothill Vethouse</div>
+            <button class="close-sidebar">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="sidebar-menu">
-            <div class="menu-item active">
+            <a href="admin.html" class="menu-item active">
                 <i class="fas fa-home"></i>
                 <span class="menu-text">Dashboard</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="adminapp.html" class="menu-item">
                 <i class="fas fa-calendar-alt"></i>
                 <span class="menu-text">Appointments</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="clients&pets.html" class="menu-item">
                 <i class="fas fa-users"></i>
                 <span class="menu-text">Clients & Pets</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="vets.html" class="menu-item">
                 <i class="fas fa-user-md"></i>
                 <span class="menu-text">Veterinarians</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="inventory.html" class="menu-item">
                 <i class="fas fa-pills"></i>
                 <span class="menu-text">Inventory</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="billing.html" class="menu-item">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span class="menu-text">Billing</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="reports.html" class="menu-item">
                 <i class="fas fa-chart-bar"></i>
                 <span class="menu-text">Reports</span>
-            </div>
-            <div class="menu-item">
+            </a>
+            <a href="settings.html" class="menu-item">
                 <i class="fas fa-cog"></i>
                 <span class="menu-text">Settings</span>
-            </div>
+            </a>
+            <a href="notifications.html" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span class="menu-text">Notifications</span>
+            </a>
+             <a href="profile.html" class="menu-item ">
+                <i class="fas fa-user-circle"></i>
+                <span class="menu-text">Profile</span>
+            </a>
+             <a href="logout.html" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Logout</span>
+            </a>
+
         </div>
     </div>
 
@@ -599,9 +705,14 @@
     <div class="main-content">
         <!-- Top Navigation -->
         <div class="top-nav">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search...">
+            <div class="nav-left">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
             </div>
             <div class="nav-icons">
                 <div class="nav-icon">
@@ -1009,21 +1120,39 @@
                     }
                 }
             });
-        });
 
-        // Toggle sidebar on mobile
-        function toggleSidebar() {
+            // Mobile sidebar toggle functionality
+            const menuToggle = document.querySelector('.menu-toggle');
+            const closeSidebar = document.querySelector('.close-sidebar');
             const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
+            const sidebarOverlay = document.querySelector('.sidebar-overlay');
             
-            if (sidebar.style.width === '250px') {
-                sidebar.style.width = '0';
-                mainContent.style.marginLeft = '0';
-            } else {
-                sidebar.style.width = '250px';
-                mainContent.style.marginLeft = '250px';
+            function openSidebar() {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
-        }
+            
+            function closeSidebarFunc() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            menuToggle.addEventListener('click', openSidebar);
+            closeSidebar.addEventListener('click', closeSidebarFunc);
+            sidebarOverlay.addEventListener('click', closeSidebarFunc);
+            
+            // Close sidebar when clicking on a menu item (for mobile)
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth < 993) {
+                        closeSidebarFunc();
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
