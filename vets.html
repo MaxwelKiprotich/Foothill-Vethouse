@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinarians Management | Foothill Vethouse Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2BAE9F;
+            --accent: #19535A;
+            --background: #F8FDFA;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E0E0E0;
+            --success: #16A34A;
+            --warning: #FACC15;
+            --danger: #DC2626;
+            --info: #2196F3;
+            --inactive: #9CA3AF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--accent);
+            color: white;
+            transition: var(--transition);
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .logo i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .brand-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--background);
+            border-radius: 20px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-icon {
+            margin-left: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .total .stat-card-icon {
+            background-color: var(--primary);
+        }
+
+        .onduty .stat-card-icon {
+            background-color: var(--success);
+        }
+
+        .specialists .stat-card-icon {
+            background-color: var(--info);
+        }
+
+        .rating .stat-card-icon {
+            background-color: var(--warning);
+        }
+
+        .stat-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card-title {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .filter-select, .filter-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(43, 174, 159, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #239e90;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(43, 174, 159, 0.1);
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(220, 38, 38, 0.1);
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        /* Veterinarians Grid */
+        .vets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .vet-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .vet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .vet-card-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .vet-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+
+        .vet-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .vet-info {
+            flex: 1;
+        }
+
+        .vet-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        .vet-title {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .vet-specialization {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .vet-status {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-onduty {
+            background-color: rgba(43, 174, 159, 0.1);
+            color: var(--primary);
+        }
+
+        .status-offduty {
+            background-color: rgba(156, 163, 175, 0.1);
+            color: var(--inactive);
+        }
+
+        .vet-card-body {
+            margin-bottom: 20px;
+        }
+
+        .vet-detail {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .vet-detail-label {
+            font-weight: 500;
+            width: 80px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .vet-detail-value {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .vet-rating {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .rating-stars {
+            color: var(--warning);
+            margin-right: 8px;
+        }
+
+        .rating-value {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .vet-card-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .view-btn {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+            border: none;
+        }
+
+        .edit-btn {
+            background-color: rgba(43, 174, 159, 0.1);
+            color: var(--primary);
+            border: none;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .analytics-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 36px;
+            margin-right: 20px;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-title {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .profile-specializations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .specialization-tag {
+            padding: 4px 10px;
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+        }
+
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .performance-stat {
+            background-color: var(--background);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .schedule-list {
+            margin-top: 15px;
+        }
+
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-date {
+            font-weight: 500;
+        }
+
+        .schedule-time {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(43, 174, 159, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 15px;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            background-color: var(--background);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background-color: rgba(43, 174, 159, 0.05);
+        }
+
+        .file-upload-label i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .toast.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar .brand-name, .sidebar .menu-text {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+
+            .vets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .top-nav {
+                padding: 15px;
+            }
+
+            .dashboard-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .vet-card-footer {
+                flex-direction: column;
+            }
+
+            .modal {
+                width: 95%;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+            </div>
+            <div class="brand-name">Foothill Vethouse</div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">Appointments</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Clients & Pets</span>
+            </div>
+            <div class="menu-item active">
+                <i class="fas fa-user-md"></i>
+                <span class="menu-text">Veterinarians</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-pills"></i>
+                <span class="menu-text">Inventory</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span class="menu-text">Billing</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">Reports</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search veterinarians...">
+            </div>
+            <div class="nav-icons">
+                <div class="nav-icon">
+                    <i class="far fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="nav-icon">
+                    <i class="far fa-envelope"></i>
+                    <div class="notification-badge">5</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div>Dr. Jane Doe</div>
+                        <div style="font-size: 12px; color: var(--text-light);">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="#">Dashboard</a> › Veterinarians
+                </div>
+                <div class="page-title">
+                    <h1>Veterinarians</h1>
+                    <div>
+                        <button class="btn btn-outline" style="margin-right: 10px;">
+                            <i class="fas fa-calendar-alt"></i> View Schedule
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddVetModal()">
+                            <i class="fas fa-plus"></i> Add New Veterinarian
+                        </button>
+                    </div>
+                </div>
+                <p>Manage clinic veterinarians, their schedules, and service records.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card total">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">12</div>
+                            <div class="stat-card-title">Total Veterinarians</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card onduty">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">8</div>
+                            <div class="stat-card-title">On Duty Now</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card specialists">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">5</div>
+                            <div class="stat-card-title">Specialists</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card rating">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">4.8</div>
+                            <div class="stat-card-title">Average Rating</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="analytics-section">
+                <div class="analytics-header">
+                    <div class="analytics-title">Appointments Handled This Month</div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="appointmentsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filters-header">
+                    <div class="filters-title">Filter Veterinarians</div>
+                </div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Specialization</label>
+                        <select class="filter-select">
+                            <option>All Specializations</option>
+                            <option>Surgery</option>
+                            <option>Vaccination</option>
+                            <option>Emergency</option>
+                            <option>General Checkup</option>
+                            <option>Grooming</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Availability</label>
+                        <select class="filter-select">
+                            <option>All Statuses</option>
+                            <option>On Duty</option>
+                            <option>Off Duty</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Rating</label>
+                        <select class="filter-select">
+                            <option>All Ratings</option>
+                            <option>High to Low</option>
+                            <option>Low to High</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="filter-input" placeholder="Name, specialization, or phone...">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Veterinarians Grid -->
+            <div class="vets-grid">
+                <!-- Veterinarian Card 1 -->
+                <div class="vet-card">
+                    <div class="vet-card-header">
+                        <div class="vet-avatar">AM</div>
+                        <div class="vet-info">
+                            <div class="vet-name">Dr. Angela Mwangi</div>
+                            <div class="vet-title">DVM, Veterinary Surgeon</div>
+                            <div class="vet-specialization">Surgery</div>
+                        </div>
+                        <span class="vet-status status-onduty">On Duty</span>
+                    </div>
+                    <div class="vet-card-body">
+                        <div class="vet-detail">
+                            <div class="vet-detail-label">Email:</div>
+                            <div class="vet-detail-value">amwangi@foothillvethouse.com</div>
+                        </div>
+                        <div class="vet-detail">
+                            <div class="vet-detail-label">Phone:</div>
+                            <div class="vet-detail-value">(650) 123-4567</div>
+                        </div>
+                        <div class="vet-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <div class="rating-value">4.7</div>
+                        </div>
+                    </div>
+                    <div class="vet-card-footer">
+                        <button class="action-btn view-btn" onclick="openVetProfileModal()">
+                            <i class="fas fa-eye"></i> View Profile
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> Edit Info
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Veterinarian Card 2 -->
+                <div class="vet-card">
+                    <div class="vet-card-header">
+                        <div class="vet-avatar">RJ</div>
+                        <div class="vet-info">
+                            <div class="vet-name">Dr. Robert Johnson</div>
+                            <div class="vet-title">DVM, Emergency Specialist</div>
+                            <div class="vet-specialization">Emergency</div>
+                        </div>
+                        <span class="vet-status status-onduty">On Duty</span>
+                    </div>
+                    <div class="vet-card-body">
+                        <div class="vet-detail">
+                            <div class="vet-detail-label">Email:</div>
+                            <div class="vet-detail-value">rjohnson@foothillvethouse.com</div>
+                        </div>
+                        <div class="vet-detail">
+                            <div class="vet-detail-label">Phone:</div>
+                            <div class="vet-detail-value">(650) 234-5678</div>
+                        </div>
+                        <div class="vet-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="rating-value">5.0</div>
+                        </div>
+                    </div>
+                    <div class="vet-card-footer">
+                        <button class="action-btn view-btn" onclick="openVetProfileModal()">
+                            <i class="fas fa-eye"></i> View Profile
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> Edit Info
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Veterinarian Card 3 -->
+                <div class="vet-card">
+                    <div class="vet-card-header">
+                        <div class="vet-avatar">SC</div>
+                        <div class="vet-info">
+                            <div class="vet-name">Dr. Sarah Chen</div>
+                            <div class="vet-title">DVM, General Practice</div>
+                            <div class="vet-specialization">General Checkup</div>
+                        </div>
+                        <span class="vet-status status-offduty">Off Duty</span>
+                    </div>
+                    <div class="vet-card-body">
+                        <div class="vet-detail">
+                            <div class="vet-detail-label">Email:</div>
+                            <div class="vet-detail-value">schen@foothillvethouse.com</div>
+                        </div>
+                        <div class="vet-detail">
+                            <div class="vet-detail-label">Phone:</div>
+                            <div class="vet-detail-value">(650) 345-6789</div>
+                        </div>
+                        <div class="vet-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="rating-value">4.2</div>
+                        </div>
+                    </div>
+                    <div class="vet-card-footer">
+                        <button class="action-btn view-btn" onclick="openVetProfileModal()">
+                            <i class="fas fa-eye"></i> View Profile
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> Edit Info
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Veterinarian Profile Modal -->
+    <div class="modal-overlay" id="vetProfileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Veterinarian Profile</div>
+                <button class="modal-close" onclick="closeVetProfileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-header">
+                    <div class="profile-avatar">AM</div>
+                    <div class="profile-info">
+                        <div class="profile-name">Dr. Angela Mwangi</div>
+                        <div class="profile-title">DVM, Veterinary Surgeon</div>
+                        <div class="profile-specializations">
+                            <span class="specialization-tag">Surgery</span>
+                            <span class="specialization-tag">Orthopedics</span>
+                        </div>
+                        <div class="vet-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <div class="rating-value">4.7 (128 reviews)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">Contact Information</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">amwangi@foothillvethouse.com</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Phone</div>
+                            <div class="detail-value">(650) 123-4567</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Address</div>
+                            <div class="detail-value">123 Clinic Ave, Foothill, CA</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Joined</div>
+                            <div class="detail-value">March 15, 2019</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">Bio</div>
+                    <p>Dr. Angela Mwangi is a board-certified veterinary surgeon with over 8 years of experience in small animal surgery. She specializes in orthopedic procedures and soft tissue surgery. Dr. Mwangi completed her residency at UC Davis and is passionate about providing the highest quality surgical care for pets.</p>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">Performance Metrics</div>
+                    <div class="performance-stats">
+                        <div class="performance-stat">
+                            <div class="stat-value">1,842</div>
+                            <div class="stat-label">Patients Served</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="stat-value">97%</div>
+                            <div class="stat-label">Satisfaction Rate</div>
+                        </div>
+                        <div class="performance-stat">
+                            <div class="stat-value">4.7</div>
+                            <div class="stat-label">Average Rating</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">Upcoming Schedule</div>
+                    <div class="schedule-list">
+                        <div class="schedule-item">
+                            <div>
+                                <div class="schedule-date">Monday, June 19</div>
+                                <div class="schedule-time">9:00 AM - 5:00 PM</div>
+                            </div>
+                            <span class="status-onduty" style="padding: 4px 8px;">On Duty</span>
+                        </div>
+                        <div class="schedule-item">
+                            <div>
+                                <div class="schedule-date">Tuesday, June 20</div>
+                                <div class="schedule-time">9:00 AM - 5:00 PM</div>
+                            </div>
+                            <span class="status-onduty" style="padding: 4px 8px;">On Duty</span>
+                        </div>
+                        <div class="schedule-item">
+                            <div>
+                                <div class="schedule-date">Wednesday, June 21</div>
+                                <div class="schedule-time">Surgery Day</div>
+                            </div>
+                            <span class="status-onduty" style="padding: 4px 8px;">On Duty</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline">
+                    <i class="fas fa-envelope"></i> Send Message
+                </button>
+                <button class="btn btn-danger">
+                    <i class="fas fa-user-slash"></i> Disable Account
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Veterinarian Modal -->
+    <div class="modal-overlay" id="addVetModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add New Veterinarian</div>
+                <button class="modal-close" onclick="closeAddVetModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addVetForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName" class="required">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="title" class="required">Title</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="specialization" class="required">Specialization</label>
+                            <select id="specialization" name="specialization" required>
+                                <option value="">Select Specialization</option>
+                                <option value="surgery">Surgery</option>
+                                <option value="vaccination">Vaccination</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="general">General Checkup</option>
+                                <option value="grooming">Grooming</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="required">Availability Status</label>
+                            <select id="status" name="status" required>
+                                <option value="">Select Status</option>
+                                <option value="onduty">On Duty</option>
+                                <option value="offduty">Off Duty</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email" class="required">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="required">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profilePicture">Profile Picture</label>
+                        <div class="file-upload">
+                            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+                            <div class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Upload Profile Picture</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" name="bio" placeholder="Brief professional biography..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAddVetModal()">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" onclick="saveVeterinarian()">
+                    <i class="fas fa-save"></i> Save Veterinarian
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Message -->
+    <div class="toast" id="successToast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Veterinarian information updated successfully!</span>
+    </div>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Appointments Chart
+            const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
+            const appointmentsChart = new Chart(appointmentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Dr. Mwangi', 'Dr. Johnson', 'Dr. Chen', 'Dr. Lee', 'Dr. Brown', 'Dr. Garcia'],
+                    datasets: [{
+                        label: 'Appointments Handled',
+                        data: [42, 38, 35, 29, 27, 25],
+                        backgroundColor: '#2BAE9F',
+                        borderColor: '#2BAE9F',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Number of Appointments'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Modal Functions
+        function openVetProfileModal() {
+            document.getElementById('vetProfileModal').classList.add('active');
+        }
+
+        function closeVetProfileModal() {
+            document.getElementById('vetProfileModal').classList.remove('active');
+        }
+
+        function openAddVetModal() {
+            document.getElementById('addVetModal').classList.add('active');
+        }
+
+        function closeAddVetModal() {
+            document.getElementById('addVetModal').classList.remove('active');
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('vetProfileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVetProfileModal();
+            }
+        });
+
+        document.getElementById('addVetModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddVetModal();
+            }
+        });
+
+        // Stats Cards Click Handler
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // In a real application, this would filter the vet list
+                const title = this.querySelector('.stat-card-title').textContent;
+                alert('Filtering by: ' + title);
+            });
+        });
+
+        // Save Veterinarian
+        function saveVeterinarian() {
+            const form = document.getElementById('addVetForm');
+            if (form.checkValidity()) {
+                closeAddVetModal();
+                showSuccessToast('Veterinarian added successfully!');
+                form.reset();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Show success toast
+        function showSuccessToast(message) {
+            const toast = document.getElementById('successToast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Simulate saving changes in profile modal
+        document.querySelector('#vetProfileModal .btn-primary').addEventListener('click', function() {
+            closeVetProfileModal();
+            showSuccessToast('Veterinarian profile updated successfully!');
+        });
+    </script>
+</body>
+</html>

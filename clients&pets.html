@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients & Pets Management | Foothill Vethouse Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2BAE9F;
+            --accent: #19535A;
+            --background: #F8FDFA;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E0E0E0;
+            --success: #16A34A;
+            --warning: #FACC15;
+            --danger: #DC2626;
+            --info: #2196F3;
+            --inactive: #9CA3AF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--accent);
+            color: white;
+            transition: var(--transition);
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .logo i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .brand-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--background);
+            border-radius: 20px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-icon {
+            margin-left: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .clients .stat-card-icon {
+            background-color: var(--primary);
+        }
+
+        .pets .stat-card-icon {
+            background-color: var(--info);
+        }
+
+        .active .stat-card-icon {
+            background-color: var(--success);
+        }
+
+        .vaccination .stat-card-icon {
+            background-color: var(--warning);
+        }
+
+        .stat-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card-title {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .view-toggle {
+            display: flex;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            padding: 8px 15px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .filter-select, .filter-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(43, 174, 159, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #239e90;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(43, 174, 159, 0.1);
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(220, 38, 38, 0.1);
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(43, 174, 159, 0.05);
+        }
+
+        .client-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .pet-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--info);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .client-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .pet-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-active {
+            background-color: rgba(43, 174, 159, 0.1);
+            color: var(--primary);
+        }
+
+        .status-inactive {
+            background-color: rgba(156, 163, 175, 0.1);
+            color: var(--inactive);
+        }
+
+        .status-due {
+            background-color: rgba(250, 204, 21, 0.1);
+            color: #ca8a04;
+        }
+
+        .status-overdue {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-btn {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+        }
+
+        .edit-btn {
+            background-color: rgba(43, 174, 159, 0.1);
+            color: var(--primary);
+        }
+
+        .delete-btn {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .pagination-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination-btn:hover:not(.active) {
+            background-color: var(--background);
+        }
+
+        /* Card View Styles */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .client-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .client-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .client-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .client-card-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .client-card-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .client-card-body {
+            margin-bottom: 20px;
+        }
+
+        .client-card-detail {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .client-card-label {
+            font-weight: 500;
+            width: 100px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .client-card-value {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .client-card-pets {
+            margin-top: 15px;
+        }
+
+        .pet-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pet-item:last-child {
+            border-bottom: none;
+        }
+
+        .pet-avatar-small {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--info);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+
+        .pet-details {
+            flex: 1;
+        }
+
+        .pet-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .pet-type {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .pet-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .client-card-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+        }
+
+        .pets-list {
+            margin-top: 15px;
+        }
+
+        .pet-card {
+            background-color: var(--background);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .pet-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pet-card-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .pet-card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Vaccination Reminders */
+        .reminders-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .reminders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .reminders-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .reminders-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .reminder-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .reminder-item:last-child {
+            border-bottom: none;
+        }
+
+        .reminder-pet-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .reminder-pet-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--warning);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .reminder-details {
+            flex: 1;
+        }
+
+        .reminder-pet-name {
+            font-weight: 500;
+        }
+
+        .reminder-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .reminder-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .toast.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar .brand-name, .sidebar .menu-text {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pet-card-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .top-nav {
+                padding: 15px;
+            }
+
+            .dashboard-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .client-card-footer {
+                flex-direction: column;
+            }
+
+            .modal {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+            </div>
+            <div class="brand-name">Foothill Vethouse</div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">Appointments</span>
+            </div>
+            <div class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Clients & Pets</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-user-md"></i>
+                <span class="menu-text">Veterinarians</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-pills"></i>
+                <span class="menu-text">Inventory</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span class="menu-text">Billing</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">Reports</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search clients or pets...">
+            </div>
+            <div class="nav-icons">
+                <div class="nav-icon">
+                    <i class="far fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="nav-icon">
+                    <i class="far fa-envelope"></i>
+                    <div class="notification-badge">5</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div>Dr. Jane Doe</div>
+                        <div style="font-size: 12px; color: var(--text-light);">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="#">Dashboard</a> › Clients & Pets
+                </div>
+                <div class="page-title">
+                    <h1>Clients & Pets</h1>
+                    <div>
+                        <button class="btn btn-outline" style="margin-right: 10px;">
+                            <i class="fas fa-plus"></i> Add New Pet
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add New Client
+                        </button>
+                    </div>
+                </div>
+                <p>View, manage, and update client and pet information.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card clients">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">142</div>
+                            <div class="stat-card-title">Total Clients</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card pets">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">189</div>
+                            <div class="stat-card-title">Total Pets</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card active">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">128</div>
+                            <div class="stat-card-title">Active Clients</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card vaccination">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">23</div>
+                            <div class="stat-card-title">Pets Due for Vaccination</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-syringe"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vaccination Reminders -->
+            <div class="reminders-section">
+                <div class="reminders-header">
+                    <div class="reminders-title">Vaccination Reminders</div>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-envelope"></i> Send All Reminders
+                    </button>
+                </div>
+                <div class="reminders-list">
+                    <div class="reminder-item">
+                        <div class="reminder-pet-info">
+                            <div class="reminder-pet-avatar">
+                                <i class="fas fa-dog"></i>
+                            </div>
+                            <div class="reminder-details">
+                                <div class="reminder-pet-name">Buddy (Golden Retriever)</div>
+                                <div class="reminder-date">Rabies vaccine due: Jun 30, 2023</div>
+                            </div>
+                        </div>
+                        <div class="reminder-actions">
+                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-check"></i> Mark Done
+                            </button>
+                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-envelope"></i> Remind
+                            </button>
+                        </div>
+                    </div>
+                    <div class="reminder-item">
+                        <div class="reminder-pet-info">
+                            <div class="reminder-pet-avatar">
+                                <i class="fas fa-cat"></i>
+                            </div>
+                            <div class="reminder-details">
+                                <div class="reminder-pet-name">Whiskers (Domestic Shorthair)</div>
+                                <div class="reminder-date">FVRCP vaccine overdue: Jun 15, 2023</div>
+                            </div>
+                        </div>
+                        <div class="reminder-actions">
+                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-check"></i> Mark Done
+                            </button>
+                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-envelope"></i> Remind
+                            </button>
+                        </div>
+                    </div>
+                    <div class="reminder-item">
+                        <div class="reminder-pet-info">
+                            <div class="reminder-pet-avatar">
+                                <i class="fas fa-dog"></i>
+                            </div>
+                            <div class="reminder-details">
+                                <div class="reminder-pet-name">Rex (German Shepherd)</div>
+                                <div class="reminder-date">DHPP vaccine due: Jul 5, 2023</div>
+                            </div>
+                        </div>
+                        <div class="reminder-actions">
+                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-check"></i> Mark Done
+                            </button>
+                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-envelope"></i> Remind
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filters-header">
+                    <div class="filters-title">Filter Clients & Pets</div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" id="tableViewBtn">
+                            <i class="fas fa-table"></i>
+                        </button>
+                        <button class="view-btn" id="cardViewBtn">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Pet Type</label>
+                        <select class="filter-select">
+                            <option>All Types</option>
+                            <option>Dog</option>
+                            <option>Cat</option>
+                            <option>Rabbit</option>
+                            <option>Bird</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Vaccination Status</label>
+                        <select class="filter-select">
+                            <option>All Statuses</option>
+                            <option>Up to Date</option>
+                            <option>Due Soon</option>
+                            <option>Overdue</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Assigned Vet</label>
+                        <select class="filter-select">
+                            <option>All Veterinarians</option>
+                            <option>Dr. Sarah Smith</option>
+                            <option>Dr. Michael Johnson</option>
+                            <option>Dr. Jennifer Lee</option>
+                            <option>Dr. Robert Brown</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="filter-input" placeholder="Client or pet name...">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div class="table-container" id="tableView">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client Name</th>
+                            <th>Pet Name</th>
+                            <th>Pet Type</th>
+                            <th>Contact Info</th>
+                            <th>Last Visit</th>
+                            <th>Assigned Vet</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-avatar">JS</div>
+                                    <div>John Smith</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pet-info">
+                                    <div class="pet-avatar">
+                                        <i class="fas fa-dog"></i>
+                                    </div>
+                                    <div>Buddy</div>
+                                </div>
+                            </td>
+                            <td>Dog</td>
+                            <td>john.smith@example.com<br>(650) 123-4567</td>
+                            <td>Jun 10, 2023</td>
+                            <td>Dr. Sarah Smith</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openClientModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-avatar">EJ</div>
+                                    <div>Emily Johnson</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pet-info">
+                                    <div class="pet-avatar">
+                                        <i class="fas fa-cat"></i>
+                                    </div>
+                                    <div>Whiskers</div>
+                                </div>
+                            </td>
+                            <td>Cat</td>
+                            <td>emily.j@example.com<br>(650) 234-5678</td>
+                            <td>May 28, 2023</td>
+                            <td>Dr. Michael Johnson</td>
+                            <td><span class="status status-due">Vaccination Due</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openClientModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-avatar">MB</div>
+                                    <div>Michael Brown</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pet-info">
+                                    <div class="pet-avatar">
+                                        <i class="fas fa-dog"></i>
+                                    </div>
+                                    <div>Rex</div>
+                                </div>
+                            </td>
+                            <td>Dog</td>
+                            <td>m.brown@example.com<br>(650) 345-6789</td>
+                            <td>Jun 5, 2023</td>
+                            <td>Dr. Jennifer Lee</td>
+                            <td><span class="status status-active">Active</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openClientModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-avatar">SD</div>
+                                    <div>Sarah Davis</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pet-info">
+                                    <div class="pet-avatar">
+                                        <i class="fas fa-cat"></i>
+                                    </div>
+                                    <div>Mittens</div>
+                                </div>
+                            </td>
+                            <td>Cat</td>
+                            <td>sarah.davis@example.com<br>(650) 456-7890</td>
+                            <td>Apr 15, 2023</td>
+                            <td>Dr. Sarah Smith</td>
+                            <td><span class="status status-inactive">Inactive</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openClientModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <div class="client-avatar">DW</div>
+                                    <div>David Wilson</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="pet-info">
+                                    <div class="pet-avatar">
+                                        <i class="fas fa-dog"></i>
+                                    </div>
+                                    <div>Luna</div>
+                                </div>
+                            </td>
+                            <td>Dog</td>
+                            <td>dwilson@example.com<br>(650) 567-8901</td>
+                            <td>Jun 12, 2023</td>
+                            <td>Dr. Robert Brown</td>
+                            <td><span class="status status-overdue">Vaccination Overdue</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openClientModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing 1-5 of 142 clients
+                    </div>
+                    <div class="pagination-controls">
+                        <div class="pagination-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="pagination-btn active">1</div>
+                        <div class="pagination-btn">2</div>
+                        <div class="pagination-btn">3</div>
+                        <div class="pagination-btn">4</div>
+                        <div class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card View -->
+            <div class="cards-container" id="cardView" style="display: none;">
+                <!-- Client Card 1 -->
+                <div class="client-card">
+                    <div class="client-card-header">
+                        <div class="client-card-avatar">JS</div>
+                        <span class="client-card-status status-active">Active</span>
+                    </div>
+                    <div class="client-card-body">
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Name:</div>
+                            <div class="client-card-value">John Smith</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Email:</div>
+                            <div class="client-card-value">john.smith@example.com</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Phone:</div>
+                            <div class="client-card-value">(650) 123-4567</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Last Visit:</div>
+                            <div class="client-card-value">Jun 10, 2023</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Veterinarian:</div>
+                            <div class="client-card-value">Dr. Sarah Smith</div>
+                        </div>
+                        <div class="client-card-pets">
+                            <div class="pet-item">
+                                <div class="pet-avatar-small">
+                                    <i class="fas fa-dog"></i>
+                                </div>
+                                <div class="pet-details">
+                                    <div class="pet-name">Buddy</div>
+                                    <div class="pet-type">Golden Retriever • 4 years</div>
+                                </div>
+                                <span class="pet-status status-active">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="client-card-footer">
+                        <button class="action-btn view-btn" onclick="openClientModal()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Client Card 2 -->
+                <div class="client-card">
+                    <div class="client-card-header">
+                        <div class="client-card-avatar">EJ</div>
+                        <span class="client-card-status status-due">Vaccination Due</span>
+                    </div>
+                    <div class="client-card-body">
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Name:</div>
+                            <div class="client-card-value">Emily Johnson</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Email:</div>
+                            <div class="client-card-value">emily.j@example.com</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Phone:</div>
+                            <div class="client-card-value">(650) 234-5678</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Last Visit:</div>
+                            <div class="client-card-value">May 28, 2023</div>
+                        </div>
+                        <div class="client-card-detail">
+                            <div class="client-card-label">Veterinarian:</div>
+                            <div class="client-card-value">Dr. Michael Johnson</div>
+                        </div>
+                        <div class="client-card-pets">
+                            <div class="pet-item">
+                                <div class="pet-avatar-small">
+                                    <i class="fas fa-cat"></i>
+                                </div>
+                                <div class="pet-details">
+                                    <div class="pet-name">Whiskers</div>
+                                    <div class="pet-type">Domestic Shorthair • 2 years</div>
+                                </div>
+                                <span class="pet-status status-due">Due</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="client-card-footer">
+                        <button class="action-btn view-btn" onclick="openClientModal()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Details Modal -->
+    <div class="modal-overlay" id="clientModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Client Details</div>
+                <button class="modal-close" onclick="closeClientModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <div class="modal-section-title">Client Information</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Full Name</div>
+                            <div class="detail-value">John Smith</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">john.smith@example.com</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Phone</div>
+                            <div class="detail-value">(650) 123-4567</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Address</div>
+                            <div class="detail-value">123 Main St, Foothill, CA 94024</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Emergency Contact</div>
+                            <div class="detail-value">Jane Smith (650) 987-6543</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Client Since</div>
+                            <div class="detail-value">March 12, 2020</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">Pets</div>
+                    <div class="pets-list">
+                        <div class="pet-card">
+                            <div class="pet-card-header">
+                                <div class="pet-card-name">Buddy</div>
+                                <span class="status status-active">Active</span>
+                            </div>
+                            <div class="pet-card-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Type</div>
+                                    <div class="detail-value">Dog (Golden Retriever)</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Age</div>
+                                    <div class="detail-value">4 years</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Gender</div>
+                                    <div class="detail-value">Male (Neutered)</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Weight</div>
+                                    <div class="detail-value">65 lbs</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Last Visit</div>
+                                    <div class="detail-value">June 10, 2023</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Next Appointment</div>
+                                    <div class="detail-value">September 5, 2023</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Vaccination Status</div>
+                                    <div class="detail-value">Up to date (Next due: Dec 15, 2023)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline">
+                    <i class="fas fa-print"></i> Print Record
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-plus"></i> Add Pet
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit Client
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Message -->
+    <div class="toast" id="successToast">
+        <i class="fas fa-check-circle"></i>
+        <span>Client information updated successfully!</span>
+    </div>
+
+    <script>
+        // View Toggle
+        document.getElementById('tableViewBtn').addEventListener('click', function() {
+            document.getElementById('tableView').style.display = 'block';
+            document.getElementById('cardView').style.display = 'none';
+            document.getElementById('tableViewBtn').classList.add('active');
+            document.getElementById('cardViewBtn').classList.remove('active');
+        });
+
+        document.getElementById('cardViewBtn').addEventListener('click', function() {
+            document.getElementById('tableView').style.display = 'none';
+            document.getElementById('cardView').style.display = 'grid';
+            document.getElementById('tableViewBtn').classList.remove('active');
+            document.getElementById('cardViewBtn').classList.add('active');
+        });
+
+        // Modal Functions
+        function openClientModal() {
+            document.getElementById('clientModal').classList.add('active');
+        }
+
+        function closeClientModal() {
+            document.getElementById('clientModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('clientModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeClientModal();
+            }
+        });
+
+        // Stats Cards Click Handler
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // In a real application, this would filter the table
+                const title = this.querySelector('.stat-card-title').textContent;
+                alert('Filtering by: ' + title);
+            });
+        });
+
+        // Show success toast (for demo purposes)
+        function showSuccessToast() {
+            const toast = document.getElementById('successToast');
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Simulate saving changes
+        document.querySelector('.modal-footer .btn-primary').addEventListener('click', function() {
+            closeClientModal();
+            showSuccessToast();
+        });
+    </script>
+</body>
+</html>

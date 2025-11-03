@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal | Foothill Vethouse Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2a7fba;
+            --primary-light: #e8f4fc;
+            --secondary: #4caf50;
+            --accent: #ff9800;
+            --text: #333;
+            --text-light: #666;
+            --background: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary: #3a9fda;
+            --primary-light: #1a2a3a;
+            --secondary: #5cbf60;
+            --accent: #ffa726;
+            --text: #f0f0f0;
+            --text-light: #b0b0b0;
+            --background: #1e1e2e;
+            --white: #2d2d44;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Login Section */
+        .login-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            padding: 40px 0;
+        }
+
+        .login-container {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--white);
+            color: var(--text);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(42, 127, 186, 0.2);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #1e6fa0;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #3d8b40;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-light);
+        }
+
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            padding: 30px 0;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), #4a9fce);
+            color: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-banner h2 {
+            margin-bottom: 10px;
+        }
+
+        .pet-list {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .pet-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background-color: var(--white);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background-color: var(--primary-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            color: var(--primary);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            width: auto;
+            font-size: 0.9rem;
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .pet-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .pet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .pet-image {
+            height: 180px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
+
+        .pet-info {
+            padding: 20px;
+        }
+
+        .pet-name {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .pet-details {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .appointments-list, .messages-list, .billing-list, .documents-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .appointment-card, .message-card, .billing-card, .document-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .appointment-header, .message-header, .billing-header, .document-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .appointment-date, .message-date, .billing-date, .document-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .appointment-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .message-preview {
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+
+        .billing-amount {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .billing-status.paid {
+            color: var(--secondary);
+        }
+
+        .billing-status.pending {
+            color: var(--accent);
+        }
+
+        .document-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .health-tips-sidebar {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+        }
+
+        .health-tips-sidebar h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-card {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .tip-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .time-slot:hover {
+            background-color: var(--primary-light);
+        }
+
+        .time-slot.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--white);
+            padding: 40px 0 20px;
+            margin-top: 50px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-light);
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: #1e6fa0;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .dashboard-nav {
+                flex-wrap: wrap;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 25px;
+            }
+
+            .pets-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-paw" style="font-size: 2rem; color: var(--primary);"></i>
+                    <h1>Foothill Vethouse Clinic</h1>
+                </div>
+                <div class="nav-controls">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="notification-icon" id="notificationIcon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Section -->
+    <section class="login-section" id="loginSection">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2>Client Portal</h2>
+                    <p>Access your pet's health records and manage appointments</p>
+                </div>
+                
+                <div class="alert alert-error" id="loginError">
+                    Invalid email or password. Please try again.
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn">Log In</button>
+                </form>
+                
+                <div class="register-link">
+                    Don't have an account? <a href="#" id="showRegister">Register here</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard">
+        <div class="container">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2>Welcome back, Sarah Johnson!</h2>
+                <p>We're here to help keep your pets healthy and happy.</p>
+                <div class="pet-list">
+                    <span class="pet-tag">Max (Dog)</span>
+                    <span class="pet-tag">Luna (Cat)</span>
+                    <span class="pet-tag">Coco (Rabbit)</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Navigation -->
+            <div class="dashboard-nav">
+                <div class="nav-tab active" data-tab="pets">
+                    <i class="fas fa-paw"></i> My Pets
+                </div>
+                <div class="nav-tab" data-tab="appointments">
+                    <i class="fas fa-calendar-alt"></i> Appointments
+                </div>
+                <div class="nav-tab" data-tab="messages">
+                    <i class="fas fa-comments"></i> Messages
+                </div>
+                <div class="nav-tab" data-tab="billing">
+                    <i class="fas fa-file-invoice-dollar"></i> Billing & Payments
+                </div>
+                <div class="nav-tab" data-tab="documents">
+                    <i class="fas fa-file-medical"></i> Documents
+                </div>
+                <button class="btn btn-small" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tab-content active" id="pets-tab">
+                <div class="section-header">
+                    <h3>My Pets</h3>
+                    <button class="btn btn-small" id="addPetBtn">
+                        <i class="fas fa-plus"></i> Add New Pet
+                    </button>
+                </div>
+                
+                <div class="pets-grid">
+                    <!-- Pet Card 1 -->
+                    <div class="pet-card">
+                        <div class="pet-image">
+                            <i class="fas fa-dog" style="font-size: 3rem;"></i>
+                        </div>
+                        <div class="pet-info">
+                            <h3 class="pet-name">Max</h3>
+                            <div class="pet-details">
+                                <p><strong>Breed:</strong> Golden Retriever</p>
+                                <p><strong>Age:</strong> 5 years</p>
+                                <p><strong>Last Visit:</strong> June 15, 2023</p>
+                            </div>
+                            <div class="pet-actions">
+                                <button class="btn btn-small" style="flex: 1;">
+                                    <i class="fas fa-file-medical"></i> Medical History
+                                </button>
+                                <button class="btn btn-small btn-secondary" style="flex: 1;">
+                                    <i class="fas fa-calendar-plus"></i> Schedule Visit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pet Card 2 -->
+                    <div class="pet-card">
+                        <div class="pet-image">
+                            <i class="fas fa-cat" style="font-size: 3rem;"></i>
+                        </div>
+                        <div class="pet-info">
+                            <h3 class="pet-name">Luna</h3>
+                            <div class="pet-details">
+                                <p><strong>Breed:</strong> Siamese</p>
+                                <p><strong>Age:</strong> 3 years</p>
+                                <p><strong>Last Visit:</strong> August 2, 2023</p>
+                            </div>
+                            <div class="pet-actions">
+                                <button class="btn btn-small" style="flex: 1;">
+                                    <i class="fas fa-file-medical"></i> Medical History
+                                </button>
+                                <button class="btn btn-small btn-secondary" style="flex: 1;">
+                                    <i class="fas fa-calendar-plus"></i> Schedule Visit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pet Card 3 -->
+                    <div class="pet-card">
+                        <div class="pet-image">
+                            <i class="fas fa-paw" style="font-size: 3rem;"></i>
+                        </div>
+                        <div class="pet-info">
+                            <h3 class="pet-name">Coco</h3>
+                            <div class="pet-details">
+                                <p><strong>Breed:</strong> Holland Lop</p>
+                                <p><strong>Age:</strong> 1 year</p>
+                                <p><strong>Last Visit:</strong> September 10, 2023</p>
+                            </div>
+                            <div class="pet-actions">
+                                <button class="btn btn-small" style="flex: 1;">
+                                    <i class="fas fa-file-medical"></i> Medical History
+                                </button>
+                                <button class="btn btn-small btn-secondary" style="flex: 1;">
+                                    <i class="fas fa-calendar-plus"></i> Schedule Visit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Appointments Tab -->
+            <div class="tab-content" id="appointments-tab">
+                <div class="section-header">
+                    <h3>Appointments</h3>
+                    <button class="btn btn-small" id="scheduleAppointmentBtn">
+                        <i class="fas fa-calendar-plus"></i> Schedule New Appointment
+                    </button>
+                </div>
+                
+                <div class="appointments-list">
+                    <!-- Appointment 1 -->
+                    <div class="appointment-card">
+                        <div class="appointment-header">
+                            <h4>Annual Checkup - Max</h4>
+                            <span class="appointment-date">October 15, 2023 at 10:00 AM</span>
+                        </div>
+                        <p>Dr. Rodriguez - Wellness Exam</p>
+                        <div class="appointment-status status-upcoming">Upcoming</div>
+                    </div>
+                    
+                    <!-- Appointment 2 -->
+                    <div class="appointment-card">
+                        <div class="appointment-header">
+                            <h4>Vaccination - Luna</h4>
+                            <span class="appointment-date">September 10, 2023 at 2:30 PM</span>
+                        </div>
+                        <p>Dr. Wilson - Rabies & FVRCP Vaccines</p>
+                        <div class="appointment-status status-completed">Completed</div>
+                    </div>
+                    
+                    <!-- Appointment 3 -->
+                    <div class="appointment-card">
+                        <div class="appointment-header">
+                            <h4>Dental Cleaning - Coco</h4>
+                            <span class="appointment-date">August 5, 2023 at 9:00 AM</span>
+                        </div>
+                        <p>Dr. Rodriguez - Routine Dental Cleaning</p>
+                        <div class="appointment-status status-completed">Completed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Tab -->
+            <div class="tab-content" id="messages-tab">
+                <div class="section-header">
+                    <h3>Messages</h3>
+                </div>
+                
+                <div class="messages-list">
+                    <!-- Message 1 -->
+                    <div class="message-card">
+                        <div class="message-header">
+                            <h4>Dr. Rodriguez</h4>
+                            <span class="message-date">October 5, 2023</span>
+                        </div>
+                        <p class="message-preview">Max's blood test results are back. Everything looks good, but I'd like to discuss his diet...</p>
+                    </div>
+                    
+                    <!-- Message 2 -->
+                    <div class="message-card">
+                        <div class="message-header">
+                            <h4>Clinic Reminder</h4>
+                            <span class="message-date">September 28, 2023</span>
+                        </div>
+                        <p class="message-preview">Friendly reminder: Luna is due for her annual checkup next month. Would you like to schedule...</p>
+                    </div>
+                    
+                    <!-- Message 3 -->
+                    <div class="message-card">
+                        <div class="message-header">
+                            <h4>Billing Department</h4>
+                            <span class="message-date">September 15, 2023</span>
+                        </div>
+                        <p class="message-preview">Your recent payment has been processed. Thank you! Your updated invoice is available in the billing section...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Billing Tab -->
+            <div class="tab-content" id="billing-tab">
+                <div class="section-header">
+                    <h3>Billing & Payments</h3>
+                </div>
+                
+                <div class="billing-list">
+                    <!-- Invoice 1 -->
+                    <div class="billing-card">
+                        <div class="billing-header">
+                            <h4>Invoice #VH-2023-0876</h4>
+                            <span class="billing-date">September 10, 2023</span>
+                        </div>
+                        <p>Luna - Vaccination Services</p>
+                        <div class="billing-amount">$85.00</div>
+                        <div class="billing-status paid">Paid</div>
+                    </div>
+                    
+                    <!-- Invoice 2 -->
+                    <div class="billing-card">
+                        <div class="billing-header">
+                            <h4>Invoice #VH-2023-0921</h4>
+                            <span class="billing-date">August 5, 2023</span>
+                        </div>
+                        <p>Coco - Dental Cleaning</p>
+                        <div class="billing-amount">$220.00</div>
+                        <div class="billing-status paid">Paid</div>
+                    </div>
+                    
+                    <!-- Invoice 3 -->
+                    <div class="billing-card">
+                        <div class="billing-header">
+                            <h4>Invoice #VH-2023-1045</h4>
+                            <span class="billing-date">October 15, 2023</span>
+                        </div>
+                        <p>Max - Annual Checkup</p>
+                        <div class="billing-amount">$65.00</div>
+                        <div class="billing-status pending">Pending</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Documents Tab -->
+            <div class="tab-content" id="documents-tab">
+                <div class="section-header">
+                    <h3>Documents</h3>
+                </div>
+                
+                <div class="documents-list">
+                    <!-- Document 1 -->
+                    <div class="document-card">
+                        <div class="document-header">
+                            <div class="document-type">
+                                <i class="fas fa-file-medical-alt"></i>
+                                <h4>Vaccination Record - Luna</h4>
+                            </div>
+                            <span class="document-date">September 10, 2023</span>
+                        </div>
+                        <p>Rabies and FVRCP vaccination certificates</p>
+                    </div>
+                    
+                    <!-- Document 2 -->
+                    <div class="document-card">
+                        <div class="document-header">
+                            <div class="document-type">
+                                <i class="fas fa-file-prescription"></i>
+                                <h4>Prescription - Max</h4>
+                            </div>
+                            <span class="document-date">June 15, 2023</span>
+                        </div>
+                        <p>Heartworm prevention medication (6-month supply)</p>
+                    </div>
+                    
+                    <!-- Document 3 -->
+                    <div class="document-card">
+                        <div class="document-header">
+                            <div class="document-type">
+                                <i class="fas fa-file-medical"></i>
+                                <h4>Lab Results - Coco</h4>
+                            </div>
+                            <span class="document-date">August 5, 2023</span>
+                        </div>
+                        <p>Pre-anesthesia blood work results</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Tips Sidebar -->
+            <div class="health-tips-sidebar">
+                <h3><i class="fas fa-lightbulb"></i> Pet Health Tips</h3>
+                
+                <div class="tip-card">
+                    <div class="tip-title">Dental Health</div>
+                    <p>Regular brushing and dental chews can help prevent periodontal disease in pets.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-title">Exercise Needs</div>
+                    <p>Most dogs need at least 30 minutes of physical activity twice a day to stay healthy.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-title">Nutrition</div>
+                    <p>Consult your vet before changing your pet's diet, as nutritional needs vary by age and health status.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Appointment Modal -->
+    <div class="modal" id="appointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Schedule New Appointment</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="appointmentForm">
+                    <div class="form-group">
+                        <label for="appointmentPet">Select Pet</label>
+                        <select id="appointmentPet" class="form-control" required>
+                            <option value="">Choose a pet</option>
+                            <option value="max">Max (Golden Retriever)</option>
+                            <option value="luna">Luna (Siamese Cat)</option>
+                            <option value="coco">Coco (Holland Lop Rabbit)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appointmentReason">Reason for Visit</label>
+                        <select id="appointmentReason" class="form-control" required>
+                            <option value="">Select reason</option>
+                            <option value="checkup">Annual Checkup</option>
+                            <option value="vaccination">Vaccination</option>
+                            <option value="dental">Dental Cleaning</option>
+                            <option value="grooming">Grooming</option>
+                            <option value="sick">Sick Visit</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appointmentVet">Preferred Veterinarian</label>
+                        <select id="appointmentVet" class="form-control">
+                            <option value="">Any Available</option>
+                            <option value="rodriguez">Dr. Rodriguez</option>
+                            <option value="wilson">Dr. Wilson</option>
+                            <option value="chen">Dr. Chen</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appointmentDate">Preferred Date</label>
+                        <input type="date" id="appointmentDate" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Preferred Time</label>
+                        <div class="time-slots">
+                            <div class="time-slot">9:00 AM</div>
+                            <div class="time-slot">10:00 AM</div>
+                            <div class="time-slot">11:00 AM</div>
+                            <div class="time-slot">1:00 PM</div>
+                            <div class="time-slot">2:00 PM</div>
+                            <div class="time-slot">3:00 PM</div>
+                            <div class="time-slot">4:00 PM</div>
+                            <div class="time-slot">5:00 PM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="appointmentNotes">Additional Notes (Optional)</label>
+                        <textarea id="appointmentNotes" class="form-control" rows="3" placeholder="Any specific concerns or requests..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelAppointment">Cancel</button>
+                <button class="btn btn-secondary" id="confirmAppointment">Schedule Appointment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Foothill Vethouse Clinic</h3>
+                    <p>Providing compassionate care for your furry family members since 2005.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Foothill Road, Mountain View, CA 94041</p>
+                    <p><i class="fas fa-phone"></i> (650) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@foothillvethouse.com</p>
+                    <a href="#" class="emergency-link"><i class="fas fa-exclamation-triangle"></i> Emergency Contact</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Hours</h3>
+                    <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                    <p>Saturday: 9:00 AM - 4:00 PM</p>
+                    <p>Sunday: Emergency Only</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Foothill Vethouse Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const scheduleAppointmentBtn = document.getElementById('scheduleAppointmentBtn');
+        const appointmentModal = document.getElementById('appointmentModal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelAppointmentBtn = document.getElementById('cancelAppointment');
+        const confirmAppointmentBtn = document.getElementById('confirmAppointment');
+        const timeSlots = document.querySelectorAll('.time-slot');
+        const themeToggle = document.getElementById('themeToggle');
+        const notificationIcon = document.getElementById('notificationIcon');
+
+        // Demo login credentials (for demo purposes only)
+        const demoCredentials = {
+            email: "client@example.com",
+            password: "password123"
+        };
+
+        // Check if user is already logged in (from localStorage)
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                showDashboard();
+            }
+            
+            // Set minimum date for appointment to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').min = today;
+        });
+
+        // Login Form Submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation (in a real app, this would be handled by a backend)
+            if (email === demoCredentials.email && password === demoCredentials.password) {
+                // Save login state to localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                showDashboard();
+            } else {
+                loginError.style.display = 'block';
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 5000);
+            }
+        });
+
+        // Logout Functionality
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('isLoggedIn');
+            showLogin();
+        });
+
+        // Show Dashboard
+        function showDashboard() {
+            loginSection.style.display = 'none';
+            dashboard.style.display = 'block';
+        }
+
+        // Show Login
+        function showLogin() {
+            loginSection.style.display = 'flex';
+            dashboard.style.display = 'none';
+            loginForm.reset();
+        }
+
+        // Tab Navigation
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                navTabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                tabContents.forEach(content => content.classList.remove('active'));
+                // Show the corresponding tab content
+                const tabId = this.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Appointment Modal
+        scheduleAppointmentBtn.addEventListener('click', function() {
+            appointmentModal.style.display = 'flex';
+        });
+
+        // Close Modal
+        function closeModal() {
+            appointmentModal.style.display = 'none';
+            // Reset form
+            document.getElementById('appointmentForm').reset();
+            // Deselect time slots
+            timeSlots.forEach(slot => slot.classList.remove('selected'));
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelAppointmentBtn.addEventListener('click', closeModal);
+
+        // Time Slot Selection
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', function() {
+                // Remove selected class from all time slots
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                // Add selected class to clicked time slot
+                this.classList.add('selected');
+            });
+        });
+
+        // Confirm Appointment
+        confirmAppointmentBtn.addEventListener('click', function() {
+            const pet = document.getElementById('appointmentPet').value;
+            const reason = document.getElementById('appointmentReason').value;
+            const date = document.getElementById('appointmentDate').value;
+            const selectedTime = document.querySelector('.time-slot.selected');
+            
+            if (!pet || !reason || !date || !selectedTime) {
+                alert('Please fill in all required fields and select a time slot.');
+                return;
+            }
+            
+            // In a real app, this would send data to a server
+            alert(`Appointment scheduled successfully!\n\nPet: ${pet}\nReason: ${reason}\nDate: ${date}\nTime: ${selectedTime.textContent}`);
+            
+            closeModal();
+        });
+
+        // Dark Mode Toggle
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+        // Notification Icon
+        notificationIcon.addEventListener('click', function() {
+            alert('You have 3 notifications:\n- Appointment reminder for Max (Oct 15)\n- New message from Dr. Rodriguez\n- Lab results available for Coco');
+        });
+
+        // Add Pet Button
+        document.getElementById('addPetBtn').addEventListener('click', function() {
+            alert('In a complete implementation, this would open a form to add a new pet profile.');
+        });
+
+        // Show Register Form (placeholder)
+        document.getElementById('showRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Registration functionality would be implemented in a complete version.');
+        });
+    </script>
+</body>
+</html>

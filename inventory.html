@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management | Foothill Vethouse Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2BAE9F;
+            --accent: #19535A;
+            --background: #F8FDFA;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E0E0E0;
+            --success: #16A34A;
+            --warning: #FACC15;
+            --danger: #DC2626;
+            --info: #2196F3;
+            --inactive: #9CA3AF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--accent);
+            color: white;
+            transition: var(--transition);
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .logo i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .brand-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--background);
+            border-radius: 20px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-icon {
+            margin-left: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .total .stat-card-icon {
+            background-color: var(--primary);
+        }
+
+        .low-stock .stat-card-icon {
+            background-color: var(--warning);
+        }
+
+        .out-of-stock .stat-card-icon {
+            background-color: var(--danger);
+        }
+
+        .categories .stat-card-icon {
+            background-color: var(--info);
+        }
+
+        .stat-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card-title {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 10px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .filter-select, .filter-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(43, 174, 159, 0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #239e90;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(43, 174, 159, 0.1);
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(220, 38, 38, 0.1);
+        }
+
+        .btn-warning {
+            background-color: transparent;
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background-color: rgba(250, 204, 21, 0.1);
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        th:hover {
+            color: var(--primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(43, 174, 159, 0.05);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        tr:nth-child(even):hover {
+            background-color: rgba(43, 174, 159, 0.05);
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-instock {
+            background-color: rgba(43, 174, 159, 0.1);
+            color: var(--primary);
+        }
+
+        .status-lowstock {
+            background-color: rgba(250, 204, 21, 0.1);
+            color: #ca8a04;
+        }
+
+        .status-outofstock {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-btn {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+        }
+
+        .edit-btn {
+            background-color: rgba(43, 174, 159, 0.1);
+            color: var(--primary);
+        }
+
+        .delete-btn {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        /* Low Stock Alerts */
+        .alerts-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .alerts-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .alerts-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-item.low {
+            border-left: 4px solid var(--warning);
+            padding-left: 10px;
+        }
+
+        .alert-item.critical {
+            border-left: 4px solid var(--danger);
+            padding-left: 10px;
+        }
+
+        .alert-info {
+            flex: 1;
+        }
+
+        .alert-item-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .alert-item-details {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .analytics-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(43, 174, 159, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Toast Message */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .toast.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar .brand-name, .sidebar .menu-text {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+
+            .alert-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .top-nav {
+                padding: 15px;
+            }
+
+            .dashboard-content {
+                padding: 15px;
+            }
+
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .modal {
+                width: 95%;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+            </div>
+            <div class="brand-name">Foothill Vethouse</div>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">Appointments</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Clients & Pets</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-user-md"></i>
+                <span class="menu-text">Veterinarians</span>
+            </div>
+            <div class="menu-item active">
+                <i class="fas fa-pills"></i>
+                <span class="menu-text">Inventory</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span class="menu-text">Billing</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span class="menu-text">Reports</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search inventory...">
+            </div>
+            <div class="nav-icons">
+                <div class="nav-icon">
+                    <i class="far fa-bell"></i>
+                    <div class="notification-badge">7</div>
+                </div>
+                <div class="nav-icon">
+                    <i class="far fa-envelope"></i>
+                    <div class="notification-badge">5</div>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div>Dr. Jane Doe</div>
+                        <div style="font-size: 12px; color: var(--text-light);">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="breadcrumb">
+                    <a href="#">Dashboard</a> › Inventory
+                </div>
+                <div class="page-title">
+                    <h1>Inventory</h1>
+                    <div>
+                        <button class="btn btn-outline" style="margin-right: 10px;">
+                            <i class="fas fa-file-export"></i> Export CSV
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddItemModal()">
+                            <i class="fas fa-plus"></i> Add New Item
+                        </button>
+                    </div>
+                </div>
+                <p>Manage and monitor medical supplies, food, and clinic equipment.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card total">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">142</div>
+                            <div class="stat-card-title">Total Items in Stock</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card low-stock">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">18</div>
+                            <div class="stat-card-title">Low Stock Items</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card out-of-stock">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">5</div>
+                            <div class="stat-card-title">Out of Stock</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card categories">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value">8</div>
+                            <div class="stat-card-title">Total Categories</div>
+                        </div>
+                        <div class="stat-card-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="analytics-section">
+                <div class="analytics-header">
+                    <div class="analytics-title">Stock Distribution by Category</div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="inventoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="alerts-section">
+                <div class="alerts-header">
+                    <div class="alerts-title">Low Stock Alerts</div>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                <div class="alerts-list">
+                    <div class="alert-item critical">
+                        <div class="alert-info">
+                            <div class="alert-item-name">Rabies Vaccine</div>
+                            <div class="alert-item-details">Quantity: 2 • Reorder Level: 10</div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-warning" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-shopping-cart"></i> Restock
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alert-item low">
+                        <div class="alert-info">
+                            <div class="alert-item-name">Heartworm Medication</div>
+                            <div class="alert-item-details">Quantity: 8 • Reorder Level: 15</div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-warning" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-shopping-cart"></i> Restock
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alert-item critical">
+                        <div class="alert-info">
+                            <div class="alert-item-name">Surgical Gloves (Medium)</div>
+                            <div class="alert-item-details">Quantity: 5 • Reorder Level: 20</div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-warning" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-shopping-cart"></i> Restock
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alert-item low">
+                        <div class="alert-info">
+                            <div class="alert-item-name">Flea & Tick Treatment</div>
+                            <div class="alert-item-details">Quantity: 12 • Reorder Level: 25</div>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="btn btn-warning" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-shopping-cart"></i> Restock
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filters-header">
+                    <div class="filters-title">Filter Inventory</div>
+                </div>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Category</label>
+                        <select class="filter-select">
+                            <option>All Categories</option>
+                            <option>Vaccines</option>
+                            <option>Medications</option>
+                            <option>Pet Food</option>
+                            <option>Equipment</option>
+                            <option>Supplies</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Stock Status</label>
+                        <select class="filter-select">
+                            <option>All Statuses</option>
+                            <option>In Stock</option>
+                            <option>Low Stock</option>
+                            <option>Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Supplier</label>
+                        <select class="filter-select">
+                            <option>All Suppliers</option>
+                            <option>VetSupply Co.</option>
+                            <option>PetMed Express</option>
+                            <option>Animal Health Inc.</option>
+                            <option>MediVet Solutions</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="filter-input" placeholder="Item name, category, or supplier...">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Supplier</th>
+                            <th>Reorder Level</th>
+                            <th>Last Updated</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Rabies Vaccine</td>
+                            <td>Vaccines</td>
+                            <td>2</td>
+                            <td>Vials</td>
+                            <td>VetSupply Co.</td>
+                            <td>10</td>
+                            <td>Jun 15, 2023</td>
+                            <td><span class="status status-outofstock">Out of Stock</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openItemModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn" onclick="openEditItemModal()">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Heartworm Medication</td>
+                            <td>Medications</td>
+                            <td>8</td>
+                            <td>Bottles</td>
+                            <td>PetMed Express</td>
+                            <td>15</td>
+                            <td>Jun 18, 2023</td>
+                            <td><span class="status status-lowstock">Low Stock</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openItemModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn" onclick="openEditItemModal()">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dog Food (Large Breed)</td>
+                            <td>Pet Food</td>
+                            <td>42</td>
+                            <td>Bags</td>
+                            <td>Animal Health Inc.</td>
+                            <td>10</td>
+                            <td>Jun 20, 2023</td>
+                            <td><span class="status status-instock">In Stock</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openItemModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn" onclick="openEditItemModal()">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Surgical Gloves (Medium)</td>
+                            <td>Supplies</td>
+                            <td>5</td>
+                            <td>Boxes</td>
+                            <td>MediVet Solutions</td>
+                            <td>20</td>
+                            <td>Jun 16, 2023</td>
+                            <td><span class="status status-outofstock">Out of Stock</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openItemModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn" onclick="openEditItemModal()">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Flea & Tick Treatment</td>
+                            <td>Medications</td>
+                            <td>12</td>
+                            <td>Packs</td>
+                            <td>PetMed Express</td>
+                            <td>25</td>
+                            <td>Jun 19, 2023</td>
+                            <td><span class="status status-lowstock">Low Stock</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <div class="action-btn view-btn" onclick="openItemModal()">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="action-btn edit-btn" onclick="openEditItemModal()">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Details Modal -->
+    <div class="modal-overlay" id="itemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Item Details</div>
+                <button class="modal-close" onclick="closeItemModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <div class="modal-section-title">Basic Information</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Item Name</div>
+                            <div class="detail-value">Rabies Vaccine</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Category</div>
+                            <div class="detail-value">Vaccines</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Quantity in Stock</div>
+                            <div class="detail-value">2</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Unit</div>
+                            <div class="detail-value">Vials</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Reorder Level</div>
+                            <div class="detail-value">10</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Supplier</div>
+                            <div class="detail-value">VetSupply Co.</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Expiry Date</div>
+                            <div class="detail-value">Dec 15, 2023</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Last Updated</div>
+                            <div class="detail-value">Jun 15, 2023</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-section-title">Notes</div>
+                    <p>Essential vaccine for dogs and cats. Requires refrigeration at 2-8°C. Order more immediately as stock is critically low.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeItemModal()">
+                    Close
+                </button>
+                <button class="btn btn-warning">
+                    <i class="fas fa-shopping-cart"></i> Order More
+                </button>
+                <button class="btn btn-primary" onclick="openEditItemModal()">
+                    <i class="fas fa-edit"></i> Edit Item
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Item Modal -->
+    <div class="modal-overlay" id="addItemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="addItemModalTitle">Add New Item</div>
+                <button class="modal-close" onclick="closeAddItemModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addItemForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemName" class="required">Item Name</label>
+                            <input type="text" id="itemName" name="itemName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category" class="required">Category</label>
+                            <select id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="vaccines">Vaccines</option>
+                                <option value="medications">Medications</option>
+                                <option value="pet-food">Pet Food</option>
+                                <option value="equipment">Equipment</option>
+                                <option value="supplies">Supplies</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quantity" class="required">Quantity in Stock</label>
+                            <input type="number" id="quantity" name="quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit" class="required">Unit Type</label>
+                            <select id="unit" name="unit" required>
+                                <option value="">Select Unit</option>
+                                <option value="vials">Vials</option>
+                                <option value="bottles">Bottles</option>
+                                <option value="packs">Packs</option>
+                                <option value="boxes">Boxes</option>
+                                <option value="bags">Bags</option>
+                                <option value="pieces">Pieces</option>
+                                <option value="kg">Kilograms</option>
+                                <option value="liters">Liters</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reorderLevel" class="required">Reorder Level</label>
+                            <input type="number" id="reorderLevel" name="reorderLevel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier" class="required">Supplier</label>
+                            <select id="supplier" name="supplier" required>
+                                <option value="">Select Supplier</option>
+                                <option value="vetsupply">VetSupply Co.</option>
+                                <option value="petmed">PetMed Express</option>
+                                <option value="animalhealth">Animal Health Inc.</option>
+                                <option value="medivet">MediVet Solutions</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="date" id="expiryDate" name="expiryDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" name="notes" placeholder="Additional information about this item..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAddItemModal()">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" onclick="saveItem()">
+                    <i class="fas fa-save"></i> Save Item
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Message -->
+    <div class="toast" id="successToast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Item added successfully!</span>
+    </div>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inventory Chart
+            const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+            const inventoryChart = new Chart(inventoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Vaccines', 'Medications', 'Pet Food', 'Equipment', 'Supplies', 'Other'],
+                    datasets: [{
+                        data: [15, 28, 35, 12, 42, 10],
+                        backgroundColor: [
+                            '#2BAE9F',
+                            '#19535A',
+                            '#16A34A',
+                            '#FACC15',
+                            '#2196F3',
+                            '#9CA3AF'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        });
+
+        // Modal Functions
+        function openItemModal() {
+            document.getElementById('itemModal').classList.add('active');
+        }
+
+        function closeItemModal() {
+            document.getElementById('itemModal').classList.remove('active');
+        }
+
+        function openAddItemModal() {
+            document.getElementById('addItemModalTitle').textContent = 'Add New Item';
+            document.getElementById('addItemModal').classList.add('active');
+        }
+
+        function openEditItemModal() {
+            document.getElementById('addItemModalTitle').textContent = 'Edit Item';
+            document.getElementById('addItemModal').classList.add('active');
+        }
+
+        function closeAddItemModal() {
+            document.getElementById('addItemModal').classList.remove('active');
+            document.getElementById('addItemForm').reset();
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('itemModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeItemModal();
+            }
+        });
+
+        document.getElementById('addItemModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddItemModal();
+            }
+        });
+
+        // Stats Cards Click Handler
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // In a real application, this would filter the inventory
+                const title = this.querySelector('.stat-card-title').textContent;
+                alert('Filtering by: ' + title);
+            });
+        });
+
+        // Save Item
+        function saveItem() {
+            const form = document.getElementById('addItemForm');
+            if (form.checkValidity()) {
+                const isEdit = document.getElementById('addItemModalTitle').textContent === 'Edit Item';
+                closeAddItemModal();
+                showSuccessToast(isEdit ? 'Item updated successfully!' : 'Item added successfully!');
+                form.reset();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Show success toast
+        function showSuccessToast(message) {
+            const toast = document.getElementById('successToast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Simulate saving changes in item modal
+        document.querySelector('#itemModal .btn-primary').addEventListener('click', function() {
+            closeItemModal();
+            openEditItemModal();
+        });
+    </script>
+</body>
+</html>
