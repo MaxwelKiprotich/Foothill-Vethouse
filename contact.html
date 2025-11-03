@@ -554,6 +554,24 @@
             .map-container {
                 height: 350px;
             }
+            /* Mobile active nav styles */
+            .nav-links.active {
+                display: flex !important;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--white);
+                padding: 18px;
+                box-shadow: var(--shadow);
+                flex-direction: column;
+                z-index: 999;
+            }
+
+            .nav-links.active a {
+                padding: 10px 0;
+                text-align: center;
+            }
         }
 
         @media (max-width: 576px) {
@@ -606,17 +624,19 @@
     <header>
         <div class="container">
             <nav class="navbar">
-                <a href="https://foothill-vethouse.vercel.app/" class="logo">
+                <a href="index.html" class="logo">
                     <i class="fas fa-paw"></i>
                     Foothill Vethouse
                 </a>
                 <div class="nav-links">
-                    <a href="https://foothill-vethouse.vercel.app/">Home</a>
-                    <a href="#">Services</a>
-                    <a href="#">Our Team</a>
-                    <a href="#">Gallery</a>
-                    <a href="#">Testimonials</a>
-                    <a href="#" class="active">Contact</a>
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="services.html">Services</a>
+                    <a href="team.html">Our Team</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="testimonials.html">Testimonials</a>
+                    <a href="appointments.html">Appointments</a>
+                    <a href="contact.html" class="active">Contact</a>
                 </div>
                 <button class="mobile-menu-btn">
                     <i class="fas fa-bars"></i>
@@ -824,11 +844,11 @@
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Services</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Gallery</a></li>
-                        <li><a href="#">Testimonials</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="team.html">Our Team</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="testimonials.html">Testimonials</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -852,7 +872,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 Foothill Vethouse Clinic. All rights reserved.</p>
+                <p>&copy; 2025 Foothill Vethouse Clinic. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -879,22 +899,44 @@
             // Check on scroll
             window.addEventListener('scroll', fadeInOnScroll);
             
-            // Mobile menu toggle
+            // Mobile menu (index-like behavior)
             const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
             const navLinks = document.querySelector('.nav-links');
-            
-            mobileMenuBtn.addEventListener('click', function() {
-                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            });
-            
-            // Adjust menu on window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 768) {
-                    navLinks.style.display = 'flex';
-                } else {
-                    navLinks.style.display = 'none';
-                }
-            });
+
+            if (mobileMenuBtn && navLinks) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('active');
+                    mobileMenuBtn.innerHTML = navLinks.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        if (navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                        }
+                    }
+                });
+
+                // Close on link click
+                navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }));
+
+                // Ensure correct state on resize
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                        navLinks.style.display = 'flex';
+                    } else {
+                        navLinks.style.display = '';
+                    }
+                });
+            }
 
             // Contact Form Validation and Submission
             const contactForm = document.getElementById('contact-form');
